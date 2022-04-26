@@ -1,6 +1,9 @@
 const express = require('express');
-const { route } = require('express/lib/application');
 
+//middleware
+const { repairExist } = require('../middlewares/repairs.middleware');
+
+//router declaration
 const router = express.Router();
 
 const {
@@ -17,8 +20,8 @@ router.post('/', createDate);
 
 router
   .route('/:id')
-  .get(getPendingById)
-  .patch(updateRepair)
-  .delete(cancelRepair);
+  .get(repairExist, getPendingById)
+  .patch(repairExist, updateRepair)
+  .delete(repairExist, cancelRepair);
 
 module.exports = { repairsRouter: router };

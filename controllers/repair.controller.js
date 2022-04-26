@@ -13,14 +13,8 @@ const getAllPending = async (req, res) => {
 
 const getPendingById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const repair = await Repair.findOne({ where: { id, status: 'pending' } });
-    if (!repair) {
-      res.status(404).json({
-        status: 'error',
-        message: `Repair not found given that id: ${id}`,
-      });
-    }
+    const { repair } = req;
+
     res.status(200).json({
       repair,
     });
@@ -42,17 +36,9 @@ const createDate = async (req, res) => {
 
 const updateRepair = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { repair } = req;
 
-    const repair = await Repair.findOne({ where: { id } });
-
-    if (!repair) {
-      res.status(404).json({
-        status: 'error',
-        message: `Repair not found given that id: ${id}`,
-      });
-    }
-    await repair.update({ status: 'completed' }, { where: { id } });
+    await repair.update({ status: 'completed' });
     res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
@@ -61,19 +47,9 @@ const updateRepair = async (req, res) => {
 
 const cancelRepair = async (req, res) => {
   try {
-    const { id } = req.params;
-    const repair = await Repair.findOne({ where: { id } });
-    if (!repair) {
-      res.status(404).json({
-        status: 'error',
-        message: `Repair not found given that id: ${id}`,
-      });
-    }
+    const { repair } = req;
 
-    const cancelledRepair = await repair.update(
-      { status: 'cancelled' },
-      { where: { id } }
-    );
+    await repair.update({ status: 'cancelled' });
 
     res.status(201).json({
       status: 'success',
